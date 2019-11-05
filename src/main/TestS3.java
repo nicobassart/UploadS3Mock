@@ -22,21 +22,52 @@ import com.amazonaws.services.s3.transfer.TransferManagerBuilder;
 public class TestS3 {
 
 	public static String host = "http://127.0.0.1:9090/";
-	public static String bucketName = "abc";
+	public static String bucketName = "testnew";
 
 	public static void main(String[] args) throws Exception {
 
 		String path = "/home/nico/Desktop/Customers/customer1-2019-09-23-afae32/ablehealth-2019-09-23-afae32";
+		String location =  "customer1/data_archives/customer1-2019-09-23-afae32/";
 		final File folder = new File(path);
-		listFilesForFolder(folder, path, TestS3.bucketName);
+		//listFilesForFolder(folder, location, TestS3.bucketName);
+		//checkExists();
+		//createBucket("testnew");
 
 	}
+	
+	private static void createBucket(String bucketName) throws FileNotFoundException {
+		try {
 
-	public static void listFilesForFolder(final File folder, String path, String bucketname)
+			BasicSessionCredentials sessionCredentials = new BasicSessionCredentials("333", "3333", "3333");
+
+			AmazonS3 s3Client = AmazonS3ClientBuilder.standard()
+					.withCredentials(new AWSStaticCredentialsProvider(sessionCredentials))
+					.withEndpointConfiguration(new EndpointConfiguration(TestS3.host, "lalal")).build();
+
+			s3Client.createBucket(bucketName);
+		} catch (AmazonServiceException e) {
+			System.out.println("Exception :- " + e);
+		}
+		System.out.println("Done!");
+	}
+
+
+	private static void checkExists() {
+		BasicSessionCredentials sessionCredentials = new BasicSessionCredentials("333", "3333", "3333");
+
+		AmazonS3 s3Client = AmazonS3ClientBuilder.standard()
+				.withCredentials(new AWSStaticCredentialsProvider(sessionCredentials))
+				.withEndpointConfiguration(new EndpointConfiguration(TestS3.host, "lalal")).build();
+		System.out.println(s3Client.doesObjectExist(bucketName, "customer1/data_archives/customer1-2019-09-23-afae32/patient-sorted.csv"));
+		
+	}
+
+	public static void listFilesForFolder(final File folder, String location, String bucketname)
 			throws FileNotFoundException {
 		for (final File fileEntry : folder.listFiles()) {
 			System.out.println(fileEntry.getName());
-			extracted(bucketname, fileEntry.getName(), fileEntry.getAbsolutePath());
+			//customer1/data_archives/customer1-2019-09-23-afae32/patient-sorted.csv
+			extracted(bucketname, location+fileEntry.getName(), fileEntry.getAbsolutePath());
 		}
 	}
 
@@ -59,7 +90,7 @@ public class TestS3 {
 					metadata);
 
 			s3Client.putObject(putRequest);
-			s3Client.createBucket("prueba");
+			//s3Client.createBucket("prueba");
 		} catch (AmazonServiceException e) {
 			System.out.println("Exception :- " + e);
 		}
