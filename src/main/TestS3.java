@@ -29,9 +29,10 @@ public class TestS3 {
 		String path = "/home/nico/Desktop/Customers/customer1-2019-09-23-afae32/ablehealth-2019-09-23-afae32";
 		String location =  "customer1/data_archives/customer1-2019-09-23-afae32/";
 		final File folder = new File(path);
-		//listFilesForFolder(folder, location, TestS3.bucketName);
+		
 		//checkExists();
-		//createBucket("testnew");
+		createBucket("testnew");
+		listFilesForFolder(folder, location, TestS3.bucketName);
 
 	}
 	
